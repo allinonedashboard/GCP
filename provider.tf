@@ -4,3 +4,4 @@ provider "google" {
   region = "us-west1" //export GCLOUD_ZONE=""
   zone = "us-west1-c" //export GCLOUD_ZONE=""
 }
+
