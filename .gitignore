@@ -2,3 +2,4 @@
 .terraform*
 gcp-cred.json
 *terraform*
+terraform.*
