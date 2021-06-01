@@ -5,3 +5,11 @@ module "bucket" {
   lifecycleruleage = 3
 }
 
+module "cluster" {
+  source = "./modules/services/cluster"
+  clustername = "my-gke-cluster"
+  location = "us-west1"
+  nodecount = 1
+  nodepoolname = "my-node-pool"
+  machinetype = "e2-micro"
+}
