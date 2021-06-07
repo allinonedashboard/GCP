@@ -1,15 +1,20 @@
 module "bucket" {
   source = "./modules/services/bucket"
   bucketname = "auto-expiring-bucket-123654788"
-  location = "US"
+  location = var.location
   lifecycleruleage = 3
 }
 
 module "cluster" {
   source = "./modules/services/cluster"
   clustername = "my-gke-cluster"
-  location = "us-west1"
+  location = var.region
   nodecount = 1
   nodepoolname = "my-node-pool"
-  machinetype = "e2-micro"
+  machinetype = var.machinetype
+}
+
+module "iam" {
+  source = "./modules/services/iam"
+  project = var.project_name
 }
