@@ -8,6 +8,13 @@ variable "location" {
   default = "US"
 }
 
+variable "network_name" {
+  type = string
+  default = "my-gke-vpc"
+}
+
+
+
 variable "region" {
   type = string
   default = "us-west1"
