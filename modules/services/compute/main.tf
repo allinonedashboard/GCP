@@ -1,10 +1,15 @@
+resource "google_service_account" "default" {
+  account_id   = "service_account_id"
+  display_name = "Service Account"
+}
+
 resource "google_compute_instance" "gke-jumphost" {
   name         = "gke-jumphost"
   project      = var.project
   machine_type = "e2-micro"
   tags         = ["ssh"]
   service_account {
-    email = var.service_account_email
+    email = google_service_account.default.email
     scopes = ["cloud-platform"]
   }
   boot_disk {
@@ -13,14 +18,14 @@ resource "google_compute_instance" "gke-jumphost" {
     }
   }
   network_interface {
-    network      = google_compute_network.vpc_net.self_link
-    subnetwork   = google_compute_subnetwork.vpc_subnet.self_link
+    network      = var.vpc_selflink
+    subnetwork   = var.subnet_selflink
     access_config {}
   }
-  metadata = {
-    ssh-keys        = "${var.ssh_user}:${file(var.ssh_pub_key_file)}"
-    startup-script  = file("./startup-script")
-  }
+//  metadata = {
+//    ssh-keys        = "${var.ssh_user}:${file(var.ssh_pub_key_file)}"
+//    startup-script  = file("./startup-script")
+//  }
   ## Copying files for k8s pod and service sample app
   provisioner "file" {
     source = "./sampleapp"

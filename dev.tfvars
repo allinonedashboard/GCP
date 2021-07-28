@@ -1,0 +1,2 @@
+teamname = "myteam"
+env      = "dev"
