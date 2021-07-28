@@ -35,7 +35,7 @@ resource "google_compute_instance" "gke-jumphost" {
       type = "ssh"
       user = "centos"
       host = google_compute_instance.gke-jumphost.network_interface.0.access_config.0.nat_ip
-      private_key = file("~/.ssh/id_rsa")
+      //private_key = file("~/.ssh/id_rsa")
       timeout = "3m"
       agent = "false"
     }
