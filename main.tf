@@ -34,62 +34,62 @@ module "network" {
   cluster_service_range   = "10.0.32.0/20"
   firewall_name           = "fw-allow-ssh-bastion"
 }
-
-data "google_compute_zones" "available" {
-  project = var.project_name
-}
-
-resource "google_service_account" "default" {
-  account_id   = "gitlab"
-  display_name = "Service Account"
-}
-
-### Creating jump-host / bastion-host  ###
-resource "google_compute_instance" "gke-jumphost" {
-  name         = "gke-jumphost"
-  project      = var.project_name
-  machine_type = "e2-micro"
-  zone         = data.google_compute_zones.available.names[0]
-  tags         = ["ssh"]
-
-  service_account {
-    email  = google_service_account.default.email
-    scopes = ["cloud-platform"]
-  }
-
-  boot_disk {
-    initialize_params {
-      image = "centos-7"
-    }
-  }
-
-  network_interface {
-    network    = module.network.vpc_self_link
-    subnetwork = module.network.subnet_self_link
-    access_config {}
-  }
-
-  metadata = {
-    ssh-keys       = "centos:${file(var.ssh_pub_key_file)}"
-    startup-script = file("./startup-script")
-  }
-
-  ## Copying files for k8s pod and service sample app
-  provisioner "file" {
-    source      = "./sampleapp"
-    destination = "/home/centos/"
-
-    connection {
-      type        = "ssh"
-      user        = "centos"
-      host        = google_compute_instance.gke-jumphost.network_interface.0.access_config.0.nat_ip
-//      private_key = file("~/.ssh/id_rsa")
-      timeout     = "3m"
-      agent       = "false"
-    }
-  }
-
-}
+//
+//data "google_compute_zones" "available" {
+//  project = var.project_name
+//}
+//
+//resource "google_service_account" "default" {
+//  account_id   = "gitlab"
+//  display_name = "Service Account"
+//}
+//
+//### Creating jump-host / bastion-host  ###
+//resource "google_compute_instance" "gke-jumphost" {
+//  name         = "gke-jumphost"
+//  project      = var.project_name
+//  machine_type = "e2-micro"
+//  zone         = data.google_compute_zones.available.names[0]
+//  tags         = ["ssh"]
+//
+//  service_account {
+//    email  = google_service_account.default.email
+//    scopes = ["cloud-platform"]
+//  }
+//
+//  boot_disk {
+//    initialize_params {
+//      image = "centos-7"
+//    }
+//  }
+//
+//  network_interface {
+//    network    = module.network.vpc_self_link
+//    subnetwork = module.network.subnet_self_link
+//    access_config {}
+//  }
+//
+//  metadata = {
+//    ssh-keys       = "centos:${file(var.ssh_pub_key_file)}"
+//    startup-script = file("./startup-script")
+//  }
+//
+//  ## Copying files for k8s pod and service sample app
+//  provisioner "file" {
+//    source      = "./sampleapp"
+//    destination = "/home/centos/"
+//
+//    connection {
+//      type        = "ssh"
+//      user        = "centos"
+//      host        = google_compute_instance.gke-jumphost.network_interface.0.access_config.0.nat_ip
+////      private_key = file("~/.ssh/id_rsa")
+//      timeout     = "3m"
+//      agent       = "false"
+//    }
+//  }
+//
+//}
 
 
 
