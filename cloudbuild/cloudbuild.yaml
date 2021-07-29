@@ -1,0 +1,16 @@
+steps:
+  - name: 'hashicorp/terraform:1.0.0'
+    args:
+      - init
+      - '-input=false'
+    id: terraform-init
+  - name: 'hashicorp/terraform:1.0.0'
+    args:
+      - validate
+    id: terraform-validate
+  - name: 'hashicorp/terraform:1.0.0'
+    args:
+      - plan
+      - '-var-file=dev.tfvars'
+    id: terraform-plan
+timeout: 1200s
